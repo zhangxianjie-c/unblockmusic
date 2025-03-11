@@ -4,7 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="740699ef-5be5-417f-9066-10200e010d0b" name="Changes" comment="" />
+    <list default="true" id="740699ef-5be5-417f-9066-10200e010d0b" name="Changes" comment="commit">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/child/unblockneteasemusic-win-x64.exe" beforeDir="false" afterPath="$PROJECT_DIR$/unblockneteasemusic-win-x64.exe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/musicLauncher.py" beforeDir="false" afterPath="$PROJECT_DIR$/musicLauncher.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/musicLauncher.spec" beforeDir="false" afterPath="$PROJECT_DIR$/musicLauncher.spec" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -25,22 +30,23 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Python.initialize (1).executor": "Run",
-    "Python.main.executor": "Run",
-    "Python.musicLauncher (1).executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "D:/Develop/Python/Python Project/launch"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python.initialize (1).executor&quot;: &quot;Run&quot;,
+    &quot;Python.main.executor&quot;: &quot;Run&quot;,
+    &quot;Python.musicLauncher (1).executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/Develop/Python/Python Project/launch&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\Develop\Python\Python Project\launch" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\Develop\Python\Python Project\launch" />
       <recent name="D:\Develop\Python\Python Project\launch\child" />
     </key>
   </component>
@@ -134,6 +140,19 @@
       <option name="presentableId" value="Default" />
       <updated>1739272997662</updated>
     </task>
+    <task id="LOCAL-00001" summary="commit">
+      <option name="closed" value="true" />
+      <created>1739330338177</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1739330338177</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="commit" />
+    <option name="LAST_COMMIT_MESSAGE" value="commit" />
   </component>
 </project>

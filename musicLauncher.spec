@@ -6,7 +6,7 @@ a = Analysis(
     pathex=[],
     binaries=[],
     datas=[
-        ('child/unblockneteasemusic-win-x64.exe', 'child'),  # 源路径 → 打包后路径
+        ('unblockneteasemusic-win-x64.exe', '.'),  # 源路径 → 打包后路径
     ],
     hiddenimports=[],
     hookspath=[],
@@ -24,7 +24,7 @@ exe = EXE(
     a.binaries,
     a.datas,
     [],
-    name='musicLauncher',
+    name='MusicLauncher',
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,

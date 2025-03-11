@@ -22,6 +22,26 @@ def is_admin():
         return False
 
 
+def setup_firewall_rule():
+    """更健壮的规则设置"""
+    try:
+        # 尝试直接添加规则，忽略重复错误
+        subprocess.run(
+            f'netsh advfirewall firewall add rule '
+            f'name="musicLauncher_AllowSubprocess" '
+            f'dir=in action=allow '
+            f'program="{get_subprocess_path()}" '
+            f'enable=yes profile=any',
+            shell=True,
+            check=True,
+            stdout=subprocess.DEVNULL,  # 丢弃输出
+            stderr=subprocess.DEVNULL,
+            timeout=10
+        )
+    except subprocess.CalledProcessError as e:
+        if "0x80320032" not in str(e):  # 规则已存在的错误代码
+            raise  # 重新抛出未知错误
+
 def add_firewall_rule(exe_path):
     """使用 netsh 添加防火墙规则"""
     rule_name = "musicLauncher_AllowSubprocess"
@@ -54,7 +74,7 @@ def get_subprocess_path():
     candidate_paths = [
         base_path / "child/unblockneteasemusic-win-x64.exe",     # 打包后的标准路径
         Path.cwd() / "unblockneteasemusic-win-x64.exe",          # 工作目录
-        Path.home() / "AppData/Local/YourApp/unblockneteasemusic-win-x64.exe",  # 用户应用目录
+        Path.home() / "AppData/Local/MusicLauncher/unblockneteasemusic-win-x64.exe",  # 用户应用目录
         Path(sys.executable).parent / "unblockneteasemusic-win-x64.exe"  # 主程序所在目录
     ]
 
@@ -65,10 +85,40 @@ def get_subprocess_path():
     # 终极验证方案
     try:
         from winreg import OpenKey, QueryValue, HKEY_LOCAL_MACHINE
-        with OpenKey(HKEY_LOCAL_MACHINE, r"SOFTWARE\musicLauncher") as key:
+        with OpenKey(HKEY_LOCAL_MACHINE, r"SOFTWARE\MusicLauncher") as key:
             return QueryValue(key, "InstallPath") + "\\unblockneteasemusic-win-x64.exe"
     except:
         raise FileNotFoundError("子程序定位失败，请检查安装完整性")
+
+
+def get_stable_subprocess_path():
+    """获取稳定路径的Node.js程序"""
+    # 固定存储路径（系统标准应用数据目录）
+    appdata_dir = Path(os.getenv('LOCALAPPDATA')) / "MusicLauncher"
+    target_path = appdata_dir / "unblockneteasemusic-win-x64.exe"
+
+    # 首次运行解压文件
+    if not target_path.exists():
+        appdata_dir.mkdir(parents=True, exist_ok=True)
+
+        # 从PyInstaller打包资源中提取
+        if getattr(sys, 'frozen', False):
+            # 打包模式
+            import pyi_splash  # 可选：显示解压进度
+            pyi_splash.update_text("Initializing...")
+
+            # 从内部资源复制文件
+            with open(sys._MEIPASS + "/unblockneteasemusic-win-x64.exe", "rb") as src:
+                with open(target_path, "wb") as dst:
+                    dst.write(src.read())
+
+            pyi_splash.close()
+        else:
+            # 开发模式
+            dev_path = Path(__file__).parent / "unblockneteasemusic-win-x64.exe"
+            target_path.write_bytes(dev_path.read_bytes())
+
+    return str(target_path.resolve())
 
 
 def load_input():
@@ -88,7 +138,7 @@ def load_input():
 
 def run_external_exe():
     """ 运行打包的 EXE 文件 """
-    exe_path = get_subprocess_path()
+    exe_path = get_stable_subprocess_path()
     if os.path.exists(exe_path):
         return subprocess.Popen(
             exe_path,
@@ -98,7 +148,6 @@ def run_external_exe():
             text=True,  # 自动将输出转换为字符串（Python 3.7+）
             encoding="utf-8"
             )
-
 
 
 class Application:
@@ -147,10 +196,6 @@ class Application:
         self.master.mainloop()  # 保持窗口打开
 
     def save_input(self):
-        """将输入框内容保存到文件"""
-        # with open(FILE_PATH, "w", encoding="utf-8") as file:
-        #     file.write(self.entry.get())
-        #     return self.entry.get()
         """存储到系统标准位置"""
         data_dir = Path(os.getenv('LOCALAPPDATA')) / "musicLauncher"
         data_dir.mkdir(exist_ok=True)  # 自动创建目录
@@ -229,8 +274,6 @@ class Application:
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE
             )
-            # os.kill(pid, signal.SIGTERM)
-            # subprocess.run(f"taskkill /F /PID {pid}", shell=True)  # 强制终止
 
         except ProcessLookupError:
             pass  # 进程已退出
@@ -242,15 +285,13 @@ class Application:
 
 
 if __name__ == '__main__':
-    # if not is_admin():
-    #     # 请求UAC提权
-    #     ctypes.windll.shell32.ShellExecuteW(
-    #         None, "runas", sys.executable, " ".join(sys.argv), None, 1
-    #     )
-    #     sys.exit()
-    # else:
-    #     add_firewall_rule(get_subprocess_path())
-    root = tk.Tk()
-    app = Application(root)
+    if not is_admin():
+        ctypes.windll.shell32.ShellExecuteW(
+            None, "runas", sys.executable, __file__, None, 1
+        )
+    else:
+        setup_firewall_rule()
+        root = tk.Tk()
+        app = Application(root)
 
 
